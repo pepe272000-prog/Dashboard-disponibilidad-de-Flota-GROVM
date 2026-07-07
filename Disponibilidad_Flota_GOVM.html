@@ -153,11 +153,11 @@ select{font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid var(--b
     <div class="g2">
       <div class="panel">
         <div class="ph"><span class="pt">📦 Reparto Local — comprometidas hoy</span><span class="ps" id="pgUMt"></span></div>
-        <div class="tw"><table><thead><tr><th>PMX</th><th>TAD</th><th>Est.</th><th>Días</th><th>Resp.</th><th>Descripción</th></tr></thead><tbody id="pgUMb"></tbody></table></div>
+        <div class="tw"><table><thead><tr><th>PMX</th><th>TAD</th><th>Est.Ap</th><th>Est.Ci</th><th>Días</th><th>Resp.</th><th>Resultado</th></tr></thead><tbody id="pgUMb"></tbody></table></div>
       </div>
       <div class="panel">
         <div class="ph"><span class="pt">🔄 Traspasos — comprometidas hoy</span><span class="ps" id="pgTRt"></span></div>
-        <div class="tw"><table><thead><tr><th>5100</th><th>Ruta</th><th>Est.</th><th>Días</th><th>Resp.</th><th>Descripción</th></tr></thead><tbody id="pgTRb"></tbody></table></div>
+        <div class="tw"><table><thead><tr><th>5100</th><th>Ruta</th><th>Est.Ap</th><th>Est.Ci</th><th>Días</th><th>Resp.</th><th>Resultado</th></tr></thead><tbody id="pgTRb"></tbody></table></div>
       </div>
     </div>
   </div>
@@ -315,11 +315,14 @@ function renderProg(){
     '<button style="'+btnStyle(estF==='FA','#d97706')+'" onclick="window._progEstF=\'FA\';renderProg()">🟡 Falla Administrada</button>'+
     '</div>';
 
-  const mkRow=(u,lblFn)=>'<tr><td><strong>'+u.eco+'</strong></td><td>'+lblFn(u)+'</td>'+
-    '<td><span class="chip '+(cm[u.est_ap]||'')+'">'+u.est_ap+'</span></td>'+
-    '<td>'+(u.est_ci==='—'?'<span style="color:var(--txt3)">—</span>':'<span class="chip '+(cm[u.est_ci]||'')+'">'+u.est_ci+'</span>')+'</td>'+
-    '<td>'+u.resp+'</td>'+
-    '<td>'+u.icono+' '+(u.resultado==='cumplió'?'<span style="color:var(--grn);font-weight:600">Cumplió</span>':u.resultado==='cumplió'?'<span style="color:var(--grn);font-weight:600">✅ Cumplió</span>':u.resultado==='vencida'?'<span style="color:var(--red);font-weight:700">🔴 Vencida / Actualizar fecha</span>':u.resultado==='no_cumplió'?'<span style="color:#ea580c;font-weight:600">🟠 No cumplió</span>':u.resultado==='pendiente'?'<span style="color:var(--amb)">🟡 Pendiente</span>':'<span style="color:var(--txt3)">⚫ Sin fecha</span>')+'</td></tr>';
+  const mkRow=(u,lblFn)=>{
+    const dc=u.dias_ci>20?'<span style="color:#7c3aed;font-weight:700">'+u.dias_ci+'d</span>':u.dias_ci>5?'<span style="color:var(--red);font-weight:600">'+u.dias_ci+'d</span>':u.dias_ci>0?'<span style="color:var(--amb)">'+u.dias_ci+'d</span>':'0d';
+    const rc=u.resultado==='cumplió'?'<span style="color:var(--grn);font-weight:600">✅ Cumplió</span>':u.resultado==='vencida'?'<span style="color:var(--red);font-weight:700">🔴 Vencida / Actualizar fecha</span>':u.resultado==='no_cumplió'?'<span style="color:#ea580c;font-weight:600">🟠 No cumplió</span>':u.resultado==='pendiente'?'<span style="color:var(--amb)">🟡 Pendiente</span>':'<span style="color:var(--txt3)">⚫ Sin fecha</span>';
+    return '<tr><td><strong>'+u.eco+'</strong></td><td>'+lblFn(u)+'</td>'+
+      '<td><span class="chip '+(cm[u.est_ap]||'')+'">'+u.est_ap+'</span></td>'+
+      '<td><span class="chip '+(cm[u.est_ci]||'')+'">'+u.est_ci+'</span></td>'+
+      '<td>'+dc+'</td><td>'+u.resp+'</td><td>'+rc+'</td></tr>';
+  };
   const noDataRow=(cols,lbl)=>'<tr><td colspan="'+cols+'" style="text-align:center;padding:.75rem;color:var(--txt2)">Sin '+lbl+' programadas para esta selección</td></tr>';
 
   // Header UM
